@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -12,8 +12,15 @@ export class UsersService {
   ){}
 
   async create(createUserDto: CreateUserDto) {
-    const createdUser = new this.userModel(createUserDto);
-    return createdUser.save();
+    try {
+      const newUser = new this.userModel(createUserDto);
+      return await newUser.save();
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new ConflictException('El nombre de usuario ya está en uso, por favor elige otro.');
+      }
+      throw error;
+    }
   }
 
   async findAll() {
