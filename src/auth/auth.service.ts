@@ -2,6 +2,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +19,7 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException("Usuario no encontrado");
     }
-    if (user?.password !== pass) {
+    if (!(await bcrypt.compare(pass, user.password))) {
       throw new UnauthorizedException("Contraseña incorrecta");
     }
     const payload = { sub: user._id, username: user.username, roles: user.roles };
