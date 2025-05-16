@@ -1,19 +1,22 @@
 import {
   IsString,
+  MinLength,
   MaxLength,
   IsArray,
   ArrayNotEmpty,
-  IsIn
+  IsIn,
 } from 'class-validator';
 import { Role } from 'src/auth/role.enum';
 
 export class CreateUserDto {
     @IsString()
     @MaxLength(100)
+    @MinLength(5)
     username: string;
 
     @IsString()
     @MaxLength(100)
+    @MinLength(5)
     password: string;
 
     @IsArray()
