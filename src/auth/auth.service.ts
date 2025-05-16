@@ -15,8 +15,11 @@ export class AuthService {
     pass: string,
   ): Promise<{ access_token: string }> {
     const user = await this.usersService.findOne(username);
+    if (!user) {
+      throw new UnauthorizedException("Usuario no encontrado");
+    }
     if (user?.password !== pass) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("Contraseña incorrecta");
     }
     const payload = { sub: user._id, username: user.username };
     return {
