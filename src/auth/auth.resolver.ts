@@ -11,7 +11,7 @@ export class AuthResolver {
   @Public()
   @Mutation(() => String) // Retorna el token como string
   async login(
-    @Args('identifier') identifier: string, // username o email
+    @Args('identifier') identifier: string, // El identificador puede ser username o email
     @Args('password') password: string,
   ): Promise<string> {
     const result = await this.authService.signIn(identifier, password);
