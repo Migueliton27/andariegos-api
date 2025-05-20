@@ -22,6 +22,13 @@ export class UsersResolver {
     return this.usersService.register(createUserInput);
   }
 
+  @Query(() => [User], { name: 'findUsersByIds' })
+  findUsersByIds(
+    @Args('userIds', { type: () => [String] }) userIds: string[],
+  ) {
+    return this.usersService.findUsersByIds(userIds);
+  }
+
   @Query(() => [User], { name: 'users' })
   findAll() {
     return this.usersService.findAll();
