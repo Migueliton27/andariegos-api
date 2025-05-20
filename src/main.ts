@@ -5,10 +5,10 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Set api prefix
+  // Configura prefijo
   app.setGlobalPrefix('api');
 
-  // Validations
+  // Validaciones
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -17,6 +17,7 @@ async function bootstrap() {
     }),
   );
 
+  // Nuevo puerto
   await app.listen(4000);
 }
 bootstrap();

@@ -1,4 +1,3 @@
-
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
@@ -8,21 +7,26 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
   async signIn(
-    username: string,
+    identifier: string, // puede ser username o email
     pass: string,
   ): Promise<{ access_token: string }> {
-    const user = await this.usersService.findOne(username);
+    // Buscar usuario por username o email
+    const user = await this.usersService.findOneByUsernameOrEmail(identifier);
     if (!user) {
-      throw new UnauthorizedException("Usuario no encontrado");
+      throw new UnauthorizedException('Usuario no encontrado');
     }
     if (!(await bcrypt.compare(pass, user.password))) {
-      throw new UnauthorizedException("Contraseña incorrecta");
+      throw new UnauthorizedException('Contraseña incorrecta');
     }
-    const payload = { sub: user._id, username: user.username, roles: user.roles };
+    const payload = {
+      sub: user._id,
+      username: user.username,
+      roles: user.roles,
+    };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

@@ -1,8 +1,13 @@
-
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from 'src/common/decorators/roles.decorator';
-import { Role } from './role.enum';
+import { GqlExecutionContext } from '@nestjs/graphql';
+import { Role } from 'src/users/enums/role.enum';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -16,7 +21,23 @@ export class RolesGuard implements CanActivate {
     if (!requiredRoles) {
       return true;
     }
-    const { user } = context.switchToHttp().getRequest();
-    return requiredRoles.some((role) => user.roles?.includes(role));
+
+    const ctx = GqlExecutionContext.create(context);
+    const request = ctx.getContext().req ?? context.switchToHttp().getRequest();
+
+    if (!request || !request.user) {
+      throw new ForbiddenException('No autenticado');
+    }
+
+    const user = request.user;
+
+    const hasRole = requiredRoles.some((role) => user.roles?.includes(role));
+    if (!hasRole) {
+      throw new ForbiddenException(
+        'No tienes permisos para acceder a este recurso',
+      );
+    }
+
+    return true;
   }
 }
