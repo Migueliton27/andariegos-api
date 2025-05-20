@@ -30,6 +30,7 @@ type UserGraphQL {
 type Query {
   users: [User!]!
   user(id: String!): User!
+  findUsersByIds(userIds: [String!]!): [User!]!
   profile: UserGraphQL!
 }
 
