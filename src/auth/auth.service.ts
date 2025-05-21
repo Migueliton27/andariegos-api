@@ -12,20 +12,32 @@ export class AuthService {
   ) {}
 
   async signIn(
-    identifier: string,  // puede ser username o email
+    identifier: string,
     pass: string,
-  ): Promise<{ access_token: string }> {
-    // Buscar usuario por username o email
+  ): Promise<{ access_token: string; user: any }> {
     const user = await this.usersService.findOneByUsernameOrEmail(identifier);
     if (!user) {
-      throw new UnauthorizedException("Usuario no encontrado");
+      throw new UnauthorizedException("Credenciales inválidas");
     }
     if (!(await bcrypt.compare(pass, user.password))) {
-      throw new UnauthorizedException("Contraseña incorrecta");
+      throw new UnauthorizedException("Credenciales inválidas");
     }
-    const payload = { sub: user._id, username: user.username, roles: user.roles };
+
+    const payload = {
+      sub: user._id,
+      username: user.username,
+      roles: user.roles,
+    };
+
     return {
       access_token: await this.jwtService.signAsync(payload),
+      user: {
+        username: user.username,
+        name: user.name,
+        email: user.email,
+        roles: user.roles,
+        state: user.state,
+      },
     };
   }
 
