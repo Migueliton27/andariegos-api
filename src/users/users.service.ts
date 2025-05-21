@@ -67,8 +67,9 @@ export class UsersService {
     return this.userModel.findOne({ username }).exec();
   }
 
-  async findUsersByIds(userIds: string[]): Promise<User[]> {
-    return this.userModel.find({ _id: { $in: userIds } }).lean().exec();
+  async findUsersByIds(userIds: string[]): Promise<{ user: User }[]> {
+    const users = await this.userModel.find({ _id: { $in: userIds } }).lean().exec();
+    return users.map(user => ({ user }));
   }
 
   async findById(id: string) {

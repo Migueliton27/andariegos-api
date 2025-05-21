@@ -4,6 +4,7 @@ import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { Public } from 'src/common/decorators/public.decorator';
+import { UserWrapper } from './dto/user-wrapper.dto';
 
 @Public()
 @Resolver(() => User)
@@ -22,10 +23,10 @@ export class UsersResolver {
     return this.usersService.register(createUserInput);
   }
 
-  @Query(() => [User], { name: 'findUsersByIds' })
+  @Query(() => [UserWrapper], { name: 'findUsersByIds' })
   findUsersByIds(
     @Args('userIds', { type: () => [String] }) userIds: string[],
-  ) {
+  ): Promise<UserWrapper[]> {
     return this.usersService.findUsersByIds(userIds);
   }
 
