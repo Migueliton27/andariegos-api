@@ -3,19 +3,19 @@ import { AuthService } from './auth.service';
 import { Public } from 'src/common/decorators/public.decorator';
 import { SignInInput } from './dto/sign-in.input';
 import { UserGraphQL } from 'src/users/dto/user-graphql.dto';
+import { LoginResponse } from './dto/login-response.dto';
 
 @Resolver()
 export class AuthResolver {
   constructor(private authService: AuthService) {}
 
   @Public()
-  @Mutation(() => String) // Retorna el token como string
+  @Mutation(() => LoginResponse)
   async login(
-    @Args('identifier') identifier: string, // El identificador puede ser username o email
+    @Args('identifier') identifier: string,
     @Args('password') password: string,
-  ): Promise<string> {
-    const result = await this.authService.signIn(identifier, password);
-    return result.access_token;
+  ): Promise<LoginResponse> {
+    return this.authService.signIn(identifier, password);
   }
 
   @Query(() => UserGraphQL)

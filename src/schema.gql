@@ -31,6 +31,18 @@ type UserGraphQL {
   roles: [String!]!
 }
 
+type UserDTO {
+  name: String!
+  username: String!
+  email: String!
+  roles: [String!]!
+}
+
+type LoginResponse {
+  access_token: String!
+  user: UserDTO!
+}
+
 type Query {
   findUsersByIds(userIds: [String!]!): [UserWrapper!]!
   users: [User!]!
@@ -43,7 +55,7 @@ type Mutation {
   registerUser(createUserInput: CreateUserInput!): User!
   updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
   removeUser(id: String!): User!
-  login(identifier: String!, password: String!): String!
+  login(identifier: String!, password: String!): LoginResponse!
 }
 
 input CreateUserInput {
