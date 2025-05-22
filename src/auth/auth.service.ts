@@ -21,11 +21,13 @@ export class AuthService {
     if (!(await bcrypt.compare(pass, user.password))) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
-
+    
     const payload = {
       sub: user._id,
+      name: user.name,
       username: user.username,
       roles: user.roles,
+      email: user.email,
     };
 
     return {
