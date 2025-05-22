@@ -5,21 +5,20 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-
-app.enableCors({
-    origin: '*',
-    credentials: true,
-    // all headers that client are allowed to use
-    allowedHeaders: [
-      'Accept',
-      'Authorization',
-      'Content-Type',
-      'X-Requested-With',
-      'apollo-require-preflight',
-      "x-apollo-operation-name"
-    ],
-    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-  });
+  // app.enableCors({
+  //     origin: '*',
+  //     credentials: true,
+  //     // all headers that client are allowed to use
+  //     allowedHeaders: [
+  //       'Accept',
+  //       'Authorization',
+  //       'Content-Type',
+  //       'X-Requested-With',
+  //       'apollo-require-preflight',
+  //       "x-apollo-operation-name"
+  //     ],
+  //     methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+  //   });
 
   // Configura prefijo
   app.setGlobalPrefix('api');
