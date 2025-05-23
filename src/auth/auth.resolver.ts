@@ -1,9 +1,10 @@
 import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { Public } from 'src/common/decorators/public.decorator';
-import { SignInInput } from './dto/sign-in.input';
 import { UserGraphQL } from 'src/users/dto/user-graphql.dto';
 import { LoginResponse } from './dto/login-response.dto';
+import { GoogleAuthGuard } from './graphql-auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver()
 export class AuthResolver {
@@ -21,5 +22,11 @@ export class AuthResolver {
   @Query(() => UserGraphQL)
     async profile(@Context() context): Promise<UserGraphQL> {
     return context.req.user; 
+  }
+
+  @Query(() => String)
+  @UseGuards(GoogleAuthGuard)
+  async loginWithGoogle() {
+    return 'Redirecting to Google...'; // No es necesario, redirige automáticamente
   }
 }

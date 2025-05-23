@@ -48,6 +48,7 @@ type Query {
   users: [User!]!
   user(id: String!): User!
   profile: UserGraphQL!
+  loginWithGoogle: String!
 }
 
 type Mutation {

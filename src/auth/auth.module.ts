@@ -7,9 +7,13 @@ import { AuthGuard } from './auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './roles.guard';
 import { AuthResolver } from './auth.resolver';
+import { PassportModule } from '@nestjs/passport';
+import { GoogleStrategy } from './google.strategy';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
+    PassportModule,
     UsersModule,
     JwtModule.register({
       global: true,
@@ -17,7 +21,9 @@ import { AuthResolver } from './auth.resolver';
       signOptions: { expiresIn: '60s' },
     }),
   ],
+  controllers: [AuthController],
   providers: [
+    GoogleStrategy,
     AuthService,
     AuthResolver,
     {
