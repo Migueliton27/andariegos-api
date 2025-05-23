@@ -13,7 +13,10 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService, private reflector: Reflector) {}
+  constructor(
+    private jwtService: JwtService,
+    private reflector: Reflector,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // Verificar si es ruta pública
@@ -27,7 +30,8 @@ export class AuthGuard implements CanActivate {
 
     // Extraer request según sea REST o GraphQL
     const ctx = GqlExecutionContext.create(context);
-    const request = ctx.getContext().req ?? context.switchToHttp().getRequest<Request>();
+    const request =
+      ctx.getContext().req ?? context.switchToHttp().getRequest<Request>();
 
     // Extraer token
     const token = this.extractTokenFromHeader(request);

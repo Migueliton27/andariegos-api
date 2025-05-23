@@ -1,15 +1,32 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
-import { GoogleAuthGuard } from './graphql-auth.guard';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Request,
+  Req,
+  Res,
+  UseGuards
+} from '@nestjs/common';
+import { AuthService } from './auth.service';
 import { Public } from 'src/common/decorators/public.decorator';
+import { SignInDto } from './dto/sign-in.dto';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from 'src/auth/role.enum';
+import { GoogleAuthGuard } from './graphql-auth.guard';
 
-@Public()
 @Controller('auth')
 export class AuthController {
-  authService: any;
+  constructor(private authService: AuthService) {}
+  
+  @Public()
   @Get('google')
   @UseGuards(GoogleAuthGuard)
   async googleAuth() {}
 
+  @Public()
   @Get('google/redirect')
     @UseGuards(GoogleAuthGuard)
     async googleAuthRedirect(@Req() req, @Res() res) {
@@ -20,5 +37,18 @@ export class AuthController {
 
     // Rediriges al frontend con el token en query params
     return res.redirect(`http://localhost:3000?token=${jwt}`);
-    }
+  }
+
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @Post('login')
+  signIn(@Body() signInDto: SignInDto) {
+    return this.authService.signIn(signInDto.username, signInDto.password);
+  }
+
+  @Roles(Role.ADMIN)
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user;
+  }
 }

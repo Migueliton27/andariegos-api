@@ -11,6 +11,11 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
+  generateJwt(user: any): string {
+    const payload = { sub: user.id, email: user.email };
+    return this.jwtService.sign(payload);
+  }
+
   async signIn(
     identifier: string,
     pass: string,

@@ -1,4 +1,8 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { InjectModel } from '@nestjs/mongoose';
@@ -9,27 +13,28 @@ import { Role } from './enums/role.enum';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectModel(User.name) private userModel: Model<User> 
-  ){}
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async create(createUserInput: CreateUserInput) {
     try {
       const newUser = new this.userModel({
-        ...createUserInput, 
+        ...createUserInput,
         registrationDate: new Date(),
       });
       return await newUser.save();
     } catch (error) {
       if (error.code === 11000) {
-        throw new ConflictException('El nombre de usuario ya está en uso, por favor elige otro.');
+        throw new ConflictException(
+          'El nombre de usuario ya está en uso, por favor elige otro.',
+        );
       }
       throw error;
     }
   }
 
   async register(createUserInput: CreateUserInput): Promise<User> {
-    const { email, username, password, name, roles, registrationDate, state } = createUserInput;
+    const { email, username, password, name, roles, registrationDate, state } =
+      createUserInput;
 
     // Verifica email y username unicos
     if (await this.userModel.findOne({ email })) {
