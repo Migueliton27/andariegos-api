@@ -6,7 +6,7 @@ import {
   ArrayNotEmpty,
   IsIn,
 } from 'class-validator';
-import { Role } from 'src/auth/role.enum';
+import { Role } from '../enums/role.enum';
 
 export class CreateUserDto {
     @IsString()

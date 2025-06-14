@@ -12,7 +12,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { Roles } from 'src/common/decorators/roles.decorator';
-import { Role } from 'src/auth/role.enum';
 import { CreateUserInput } from './dto/create-user.input';
 
 @Public()

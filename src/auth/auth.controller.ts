@@ -14,8 +14,8 @@ import { AuthService } from './auth.service';
 import { Public } from 'src/common/decorators/public.decorator';
 import { SignInDto } from './dto/sign-in.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
-import { Role } from 'src/auth/role.enum';
 import { GoogleAuthGuard } from './graphql-auth.guard';
+import { Role } from 'src/users/enums/role.enum';
 
 @Controller('auth')
 export class AuthController {
