@@ -21,34 +21,11 @@ type UserWrapper {
   user: User!
 }
 
-type UserGraphQL {
-  username: String!
-  password: String!
-  name: String!
-  email: String!
-  registrationDate: DateTime!
-  state: String!
-  roles: [String!]!
-}
-
-type UserDTO {
-  name: String!
-  username: String!
-  email: String!
-  roles: [String!]!
-}
-
-type LoginResponse {
-  access_token: String!
-  user: UserDTO!
-}
-
 type Query {
+  findUser(identifier: String!): User
   findUsersByIds(userIds: [String!]!): [UserWrapper!]!
   users: [User!]!
   user(id: String!): User!
-  profile: UserGraphQL!
-  loginWithGoogle: String!
 }
 
 type Mutation {
@@ -56,7 +33,6 @@ type Mutation {
   registerUser(createUserInput: CreateUserInput!): User!
   updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
   removeUser(id: String!): User!
-  login(identifier: String!, password: String!): LoginResponse!
 }
 
 input CreateUserInput {

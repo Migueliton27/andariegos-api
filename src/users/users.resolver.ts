@@ -23,6 +23,13 @@ export class UsersResolver {
     return this.usersService.register(createUserInput);
   }
 
+  @Query(() => User, { name: 'findUser', nullable: true })
+  async findUser(
+    @Args('identifier') identifier: string,
+  ): Promise<User | null> {
+    return this.usersService.findOneByUsernameOrEmail(identifier);
+  }
+
   @Query(() => [UserWrapper], { name: 'findUsersByIds' })
   findUsersByIds(
     @Args('userIds', { type: () => [String] }) userIds: string[],
