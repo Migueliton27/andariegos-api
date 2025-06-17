@@ -12,7 +12,6 @@ import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import { Args, Mutation } from '@nestjs/graphql';
 import { CreateProfileInput } from './dto/create-profile.input';
-import { jwtConstants } from './constants';
 
 @Injectable()
 export class UsersService {
@@ -45,10 +44,6 @@ export class UsersService {
     // Verificar y decodificar el token
     let payload: any;
     try {
-      console.log(accessToken)
-      console.log('JWT_SECRET:', process.env.JWT_SECRET);
-      payload = this.jwtService.decode(accessToken);
-      console.log(payload);
       payload = this.jwtService.verify(accessToken, { secret: process.env.JWT_SECRET });
     } catch (e) {
       console.log(e);
