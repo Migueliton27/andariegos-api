@@ -5,6 +5,7 @@ import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { Public } from 'src/common/decorators/public.decorator';
 import { UserWrapper } from './dto/user-wrapper.dto';
+import { CreateProfileInput } from './dto/create-profile.input';
 
 @Public()
 @Resolver(() => User)
@@ -18,9 +19,9 @@ export class UsersResolver {
 
   @Mutation(() => User)
   async registerUser(
-    @Args('createUserInput') createUserInput: CreateUserInput,
+    @Args('createProfileInput') createProfileInput: CreateProfileInput,
   ): Promise<User> {
-    return this.usersService.register(createUserInput);
+    return this.usersService.registerUser(createProfileInput);
   }
 
   @Query(() => User, { name: 'findUser', nullable: true })

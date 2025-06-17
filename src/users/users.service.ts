@@ -2,18 +2,23 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
-import { UserState } from './enums/user-state.enum';
-import { Role } from './enums/role.enum';
+import { Args, Mutation } from '@nestjs/graphql';
+import { CreateProfileInput } from './dto/create-profile.input';
+import { jwtConstants } from './constants';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    @InjectModel(User.name) private userModel: Model<User>) {}
 
   async create(createUserInput: CreateUserInput) {
     try {
@@ -32,30 +37,37 @@ export class UsersService {
     }
   }
 
-  async register(createUserInput: CreateUserInput): Promise<User> {
-    const { email, username, password, name, roles, registrationDate, state } =
-      createUserInput;
+  async registerUser(
+    @Args('createProfileInput') createProfileInput: CreateProfileInput,
+  ): Promise<User> {
+    const { accessToken } = createProfileInput;
 
-    // Verifica email y username unicos
-    if (await this.userModel.findOne({ email })) {
-      throw new BadRequestException('El email ya está registrado');
-    }
-    if (await this.userModel.findOne({ username })) {
-      throw new BadRequestException('El username ya está en uso');
+    // Verificar y decodificar el token
+    let payload: any;
+    try {
+      console.log(accessToken)
+      console.log('JWT_SECRET:', process.env.JWT_SECRET);
+      payload = this.jwtService.decode(accessToken);
+      console.log(payload);
+      payload = this.jwtService.verify(accessToken, { secret: process.env.JWT_SECRET });
+    } catch (e) {
+      console.log(e);
+      throw new UnauthorizedException('Token inválido');
     }
 
-    // Crea modelo
-    const newUser = new this.userModel({
-      name,
-      email,
-      username,
-      password,
-      roles: roles || [Role.USER],
-      registrationDate: registrationDate || new Date(),
-      state: state || UserState.ACTIVE,
+    const userId = payload.sub;
+
+    // Verifica si ya tiene perfil
+    const existing = await this.userModel.findOne({ userId });
+    if (existing) {
+      throw new BadRequestException('El perfil ya existe');
+    }
+
+    const newProfile = new this.userModel({
+      userId
     });
 
-    return newUser.save();
+    return newProfile.save();
   }
 
   async findAll() {

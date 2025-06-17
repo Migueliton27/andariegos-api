@@ -32,7 +32,7 @@ async function bootstrap() {
     }),
   );
 
-  // Nuevo puerto
+  // Puerto 4002
   await app.listen(4002);
 }
 bootstrap();
