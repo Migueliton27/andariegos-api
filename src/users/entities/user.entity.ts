@@ -4,23 +4,6 @@ import { ObjectType, Field } from '@nestjs/graphql';
 export class User {
 
   @Field()
-  name: string;
+  userId: string;
 
-   @Field()
-  email: string;
-
-  @Field()
-  username: string;
-
-  @Field()
-  password: string;
-
-  @Field(() => [String])
-  roles: string[];
-
-  @Field()
-  registrationDate: Date;
-
-  @Field()
-  state: string;
 }
