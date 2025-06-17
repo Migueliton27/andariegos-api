@@ -4,7 +4,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/user.schema';
 import { UsersResolver } from './users.resolver';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({

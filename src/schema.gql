@@ -26,7 +26,6 @@ type Mutation {
 
 input CreateUserInput {
   userId: String!
-  accessToken: String!
 }
 
 input CreateProfileInput {
@@ -35,5 +34,4 @@ input CreateProfileInput {
 
 input UpdateUserInput {
   userId: String
-  accessToken: String
 }
