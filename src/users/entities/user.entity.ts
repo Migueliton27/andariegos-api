@@ -6,4 +6,10 @@ export class User {
   @Field()
   userId: string;
 
+  @Field()
+  username: string;
+
+  @Field()
+  name: string;
+
 }
