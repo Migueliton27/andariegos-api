@@ -7,9 +7,12 @@ export class User {
   userId: string;
 
   @Field()
-  username: string;
+  name: string;
 
   @Field()
-  name: string;
+  nationality: string;
+
+  @Field()
+  state: string;
 
 }

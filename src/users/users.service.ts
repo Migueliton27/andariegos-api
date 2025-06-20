@@ -39,7 +39,7 @@ export class UsersService {
   async registerUser(
     @Args('createProfileInput') createProfileInput: CreateProfileInput,
   ): Promise<User> {
-    const { accessToken } = createProfileInput;
+    const { accessToken, name, nationality, state } = createProfileInput;
 
     // Verificar y decodificar el token
     let payload: any;
@@ -53,13 +53,17 @@ export class UsersService {
     const userId = payload.sub;
 
     // Verifica si ya tiene perfil
-    const existing = await this.userModel.findOne({ userId });
+    const existing = await this.userModel.findById(userId).exec();
     if (existing) {
       throw new BadRequestException('El perfil ya existe');
     }
 
     const newProfile = new this.userModel({
-      userId
+      _id: userId,
+      userId,
+      state,
+      name,
+      nationality
     });
 
     return newProfile.save();
